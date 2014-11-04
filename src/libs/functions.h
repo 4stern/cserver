@@ -4,6 +4,7 @@
 #define FUNCTIONS_H
 
 #include <string.h>
+#include <unistd.h>
 
 void getRequestedFileName(char* empfangen, char* dateiname)
 {
@@ -18,5 +19,15 @@ void getRequestedFileName(char* empfangen, char* dateiname)
     dateiname[laenge]=0;
 }
 
+int fileExist (char *filename)
+{
+    FILE *file;
+    if (file = fopen(filename, "r"))
+    {
+        fclose(file);
+        return 1;
+    }
+    return -1;
+}
 
 #endif
