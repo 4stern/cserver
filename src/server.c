@@ -29,21 +29,27 @@ int main()
     bind(server_socket, (struct sockaddr *)&serverinfo, laenge);
     listen(server_socket, 3);
 
+    printf("\nServer listen ar port %i", port);
+
     while(1)
     {
-        printf("\nServer running at port %i", port);
         fflush(stdout);
-
         client_socket = accept(server_socket, (struct sockaddr *)&clientinfo, &laenge);
         inet_ntop(AF_INET, &clientinfo.sin_addr.s_addr,client_ip, INET_ADDRSTRLEN);
 
-        printf("\nVerbindung mit %s", client_ip);
+        printf("\nRequest from %s", client_ip);
 
         anzahl = read(client_socket, empfangen, sizeof(empfangen));
         empfangen[anzahl]=0;
         
+        char *filename;
+        getRequestedFileName(empfangen, filename);
+
         write(client_socket,text_http_ok, strlen(text_http_ok));
         write(client_socket,text_html_anfang, strlen(text_html_anfang));
+
+        write(client_socket,filename, strlen(filename));
+
         write(client_socket,text_html_ende, strlen(text_html_ende));
         close(client_socket);
     }
