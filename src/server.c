@@ -15,7 +15,7 @@ int main()
     char empfangen[1000];
     char *position1, *position2;
     char dateiname[100];
-    char text_http_ok[] = "HTTP/1.0 200 OK\r\n\r\n";
+    char text_http_404[] = "HTTP/1.0 404 Not Found\r\n\r\n";
     char text_html_anfang[] = "<html><body>";
     char text_html_ende[] = "</body></html>";
 
@@ -56,17 +56,32 @@ int main()
 
         //file exists?
         if( fileExist(currentFilePath) == 1 ){
-            printf(": '%s' (200)",requestedPathFilename);
+            
+            char *fileContent;
+            long length = fileGetContent(currentFilePath, fileContent);
+            printf(": '%s'(%lu) -> 200",requestedPathFilename,length);
+
+            char header[] = "HTTP/1.0 200 OK\r\n";
+            strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
+            strcat(header, "\r\n");
+
+            write(client_socket,header, strlen(header));
+            write(client_socket,fileContent, strlen(fileContent));
+
         } else {
-            printf(": '%s' (404)",requestedPathFilename);
+
+            printf(": '%s' -> 404",requestedPathFilename);
+
+            char header[] = "HTTP/1.0 404 Not Found\r\n";
+            strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
+            strcat(header, "\r\n");
+
+            write(client_socket,header, strlen(header));
+
+            write(client_socket,text_html_anfang, strlen(text_html_anfang));
+            write(client_socket,requestedPathFilename, strlen(requestedPathFilename));
+            write(client_socket,text_html_ende, strlen(text_html_ende));
         }
-        
-        write(client_socket,text_http_ok, strlen(text_http_ok));
-        write(client_socket,text_html_anfang, strlen(text_html_anfang));
-
-        write(client_socket,requestedPathFilename, strlen(requestedPathFilename));
-
-        write(client_socket,text_html_ende, strlen(text_html_ende));
         close(client_socket);
     }
 }
