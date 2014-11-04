@@ -1,2 +1,3 @@
 #ingoring the bin directory
 bin/**
+*.swp
