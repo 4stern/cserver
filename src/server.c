@@ -5,8 +5,6 @@
 #include <string.h>
 #include "libs/functions.h"
 
-#define MAXPATH 256 
-
 int main()
 {
     int server_socket, client_socket;
