@@ -5,6 +5,8 @@
 #include <string.h>
 #include "libs/functions.h"
 
+#define MAXPATH 256 
+
 int main()
 {
     int server_socket, client_socket;
@@ -31,6 +33,10 @@ int main()
 
     printf("\nServer listen ar port %i", port);
 
+    char publicPath[256];
+    strcpy (publicPath, "/home/vierstern/git/cserver/public/");
+    printf("\npublicPath: %s",publicPath);
+
     while(1)
     {
         fflush(stdout);
@@ -42,13 +48,25 @@ int main()
         anzahl = read(client_socket, empfangen, sizeof(empfangen));
         empfangen[anzahl]=0;
         
-        char *filename;
-        getRequestedFileName(empfangen, filename);
+        char *requestedPathFilename;
+        getRequestedFileName(empfangen, requestedPathFilename);
 
+        //concat publicPath with requestedPathFilename
+        char currentFilePath[256];
+        strcpy(currentFilePath, publicPath);
+        strcat (currentFilePath, requestedPathFilename);
+
+        //file exists?
+        if( fileExist(currentFilePath) == 1 ){
+            printf(": '%s' (200)",requestedPathFilename);
+        } else {
+            printf(": '%s' (404)",requestedPathFilename);
+        }
+        
         write(client_socket,text_http_ok, strlen(text_http_ok));
         write(client_socket,text_html_anfang, strlen(text_html_anfang));
 
-        write(client_socket,filename, strlen(filename));
+        write(client_socket,requestedPathFilename, strlen(requestedPathFilename));
 
         write(client_socket,text_html_ende, strlen(text_html_ende));
         close(client_socket);
