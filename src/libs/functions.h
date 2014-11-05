@@ -5,6 +5,7 @@
 
 #include <string.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 void getRequestedFileName(char* empfangen, char* dateiname)
 {
@@ -28,6 +29,25 @@ int fileExist (char *filename)
         return 1;
     }
     return -1;
+}
+
+char * fileGetContent(char *filename){
+    long length;
+    char * buffer = 0;
+    FILE * f = fopen (filename, "r");
+
+    if (f){
+        fseek (f, 0, SEEK_END);
+        length = ftell (f);
+        fseek (f, 0, SEEK_SET);
+        buffer = malloc (length+1);
+        if (buffer){
+            fread (buffer, 1, length, f);
+        }
+        buffer[length] = 0;
+      fclose (f);
+    }
+    return buffer;
 }
 
 #endif
