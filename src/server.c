@@ -14,10 +14,6 @@ int main()
     char client_ip[INET_ADDRSTRLEN];
     char empfangen[1000];
     char *position1, *position2;
-    char dateiname[100];
-    char text_http_404[] = "HTTP/1.0 404 Not Found\r\n\r\n";
-    char text_html_anfang[] = "<html><body>";
-    char text_html_ende[] = "</body></html>";
 
     server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -77,11 +73,12 @@ int main()
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
             strcat(header, "\r\n");
 
-            write(client_socket,header, strlen(header));
+            char body[] = "<html><body>";
+            strcat(body, "Not Found");
+            strcat(body, "</body></html>");
 
-            write(client_socket,text_html_anfang, strlen(text_html_anfang));
-            write(client_socket,requestedPathFilename, strlen(requestedPathFilename));
-            write(client_socket,text_html_ende, strlen(text_html_ende));
+            write(client_socket, header, strlen(header));
+            write(client_socket, body, strlen(body));
         }
         close(client_socket);
     }
