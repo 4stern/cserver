@@ -31,25 +31,23 @@ int fileExist (char *filename)
     return -1;
 }
 
-long fileGetContent(char *filename, char *buffer){
+char * fileGetContent(char *filename){
     long length;
-    //buffer = 0;
+    char * buffer = 0;
     FILE * f = fopen (filename, "r");
 
     if (f){
         fseek (f, 0, SEEK_END);
         length = ftell (f);
         fseek (f, 0, SEEK_SET);
-        buffer = malloc (length);
+        buffer = malloc (length+1);
         if (buffer){
             fread (buffer, 1, length, f);
         }
-
-        printf("\n----\n%s\n------\n", buffer);
-
+        buffer[length] = 0;
       fclose (f);
     }
-    return length;
+    return buffer;
 }
 
 #endif

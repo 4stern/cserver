@@ -58,8 +58,9 @@ int main()
         if( fileExist(currentFilePath) == 1 ){
             
             char *fileContent;
-            long length = fileGetContent(currentFilePath, fileContent);
-            printf(": '%s'(%lu) -> 200",requestedPathFilename,length);
+            //long *length;
+            fileContent = fileGetContent(currentFilePath);
+            printf(": '%s'(%lu) -> 200",requestedPathFilename);
 
             char header[] = "HTTP/1.0 200 OK\r\n";
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
