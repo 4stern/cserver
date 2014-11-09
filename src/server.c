@@ -58,6 +58,9 @@ int main()
 
             char header[] = "HTTP/1.0 200 OK\r\n";
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
+            strcat(header, "Server: CServer/0.1 (Unix/Linux)\r\n");
+            strcat(header, "X-Do-Not-Track: 1\r\n");
+            strcat(header, "DNT: 1\r\n");
             strcat(header, "\r\n");
 
             write(client_socket,header, strlen(header));
@@ -69,6 +72,9 @@ int main()
 
             char header[] = "HTTP/1.0 404 Not Found\r\n";
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
+            strcat(header, "Server: CServer/0.1 (Unix/Linux)\r\n");
+            strcat(header, "X-Do-Not-Track: 1\r\n");
+            strcat(header, "DNT: 1\r\n");
             strcat(header, "\r\n");
 
             char body[] = "<html><body>";
