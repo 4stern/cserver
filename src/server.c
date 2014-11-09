@@ -7,9 +7,12 @@
 
 int main()
 {
+    int port = 5001;
+    char httpHeaderServer[] = "Server: CServer (Unix/Linux)\r\n";
+    char httpHeaderDoNotTrack[] = "X-Do-Not-Track: 1\r\nDNT: 1\r\n";
+
     int server_socket, client_socket;
     int anzahl, laenge;
-    int port = 5001;
     struct sockaddr_in serverinfo, clientinfo;
     char client_ip[INET_ADDRSTRLEN];
     char empfangen[1000];
@@ -60,9 +63,8 @@ int main()
 
             char header[] = "HTTP/1.0 200 OK\r\n";
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
-            strcat(header, "Server: CServer/0.1 (Unix/Linux)\r\n");
-            strcat(header, "X-Do-Not-Track: 1\r\n");
-            strcat(header, "DNT: 1\r\n");
+            strcat(header, httpHeaderServer);
+            strcat(header, httpHeaderDoNotTrack);
             strcat(header, "\r\n");
 
             write(client_socket,header, strlen(header));
@@ -74,9 +76,8 @@ int main()
 
             char header[] = "HTTP/1.0 404 Not Found\r\n";
             strcat(header, "Content-Type: text/html; charset=utf-8\r\n");
-            strcat(header, "Server: CServer/0.1 (Unix/Linux)\r\n");
-            strcat(header, "X-Do-Not-Track: 1\r\n");
-            strcat(header, "DNT: 1\r\n");
+            strcat(header, httpHeaderServer);
+            strcat(header, httpHeaderDoNotTrack);
             strcat(header, "\r\n");
 
             char body[] = "<html><body>";
