@@ -27,8 +27,7 @@ int main()
 
     printf("\nServer listen ar port %i", port);
 
-    char publicPath[256];
-    strcpy (publicPath, "/home/vierstern/git/cserver/public/");
+    char publicPath[] = "/home/vierstern/git/cserver/public/";
     printf("\npublicPath: %s",publicPath);
 
     while(1)
@@ -46,7 +45,7 @@ int main()
         getRequestedFileName(empfangen, requestedPathFilename);
 
         //concat publicPath with requestedPathFilename
-        char currentFilePath[256];
+        char currentFilePath[]="";
         strcpy(currentFilePath, publicPath);
         strcat (currentFilePath, requestedPathFilename);
 
