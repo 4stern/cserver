@@ -2,13 +2,51 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
+#include <stdlib.h>
 #include <string.h>
 #include "libs/functions.h"
+#include "libs/ini.h"
+#include "libs/ini.c"
+
+typedef struct
+{
+    int port;
+    const char* name;
+} configuration;
+
+static int handler(void* user, const char* section, const char* name, const char* value)
+{
+    configuration* pconfig = (configuration*)user;
+
+    #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
+    if (MATCH("server", "port")) {
+        pconfig->port = atoi(value);
+
+    } else if (MATCH("http-header", "name")) {
+        pconfig->name = strdup(value);
+
+    } else {
+        return 0;  /* unknown section/name, error */
+    }
+    return 1;
+}
 
 int main()
 {
-    int port = 5001;
-    char httpHeaderServer[] = "Server: CServer (Unix/Linux)\r\n";
+    configuration config = { 5002, "CServer/0.1 alpha" };
+
+    if (ini_parse("config.ini", handler, &config) < 0) {
+
+    }
+    printf("Config loaded from 'config.ini': name=%s, port=%i\n",
+        config.name, config.port);
+
+
+    int port = config.port;
+    char *httpHeaderServer;
+    strcpy(httpHeaderServer,"Server: ");
+    strcat(httpHeaderServer,config.name);
+    strcat(httpHeaderServer,"\r\n");
     char httpHeaderDoNotTrack[] = "X-Do-Not-Track: 1\r\nDNT: 1\r\n";
 
     int server_socket, client_socket;
